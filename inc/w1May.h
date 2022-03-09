@@ -1,0 +1,1 @@
+typedef int  (*UapShmPt)(int,ex*,exx*,vx*);

@@ -1,0 +1,2 @@
+int get_conf0(conf0);
+int get_confx(conf,int voie);

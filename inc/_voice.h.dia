@@ -1,0 +1,119 @@
+//#include  <srllib.h>
+//#include  <dxxxlib.h>
+#include  "fcontrol.h"
+#include  "parprog.h"
+#include  "otsconf.h"
+#include  "app.h"
+#include  "apgen.h"
+#include  "dialhead.h"
+
+#define  KER_PRINT      0
+#define  GINN_MAXDTMF    4096
+
+#define GINN_CHANFILE   "./channel.prm"
+
+enum    {
+        GINN_ERROR = -1, GINN_NONE, GINN_DTI, GINN_AG
+};
+
+typedef int  (*GINN_FUNCPTR)(void);
+
+enum    {
+        GINN_TN_NONE, GINN_TN_BUSY, GINN_TN_SPECIAL
+};
+
+enum    {
+        GINN_SDC_NONE, GINN_SDC_TONEON, GINN_SDC_TONEOFF, GINN_SDC_TASKFAIL,
+        GINN_SDC_DISCONNECTED, GINN_SDC_ABITON, GINN_SDC_ABITOFF,
+        GINN_SDC_BBITON, GINN_SDC_BBITOFF, GINN_SDC_TN_BUSY, GINN_SDC_TN_SPECIAL
+};
+//#define GINN_LLONGSTR   16
+enum    {
+        GINN_FMT_CONF, GINN_FMT_ADPCM, GINN_FMT_ULAW, GINN_FMT_ALAW,
+        GINN_FMT_WAVE_ULAW, GINN_FMT_WAVE_ALAW,
+        GINN_FMT_MAX
+};
+
+enum    {
+        GINN_FNM_MESS, GINN_FNM_VOX, GINN_FNM_ULAW, GINN_FNM_ALAW,
+        GINN_FNM_WAVE_ULAW, GINN_FNM_WAVE_ALAW,
+        GINN_FNM_MAX
+};
+
+
+extern  vx      vxp;
+extern  ex      exp;
+extern  ex      comp;
+extern  exx     exxp;
+extern  CONF    cf;
+extern  CONF0   cf0;
+extern  char    devnam[];
+extern  int     erfd;
+extern  CHANNEL chn;          // for AP work file 
+extern  FILE    *fdbfd;
+extern  FILE    *dbg_fdbfd;
+extern  struct  tm      *tm;
+extern  long    lt;
+extern  char    etab_buff[];
+extern  char    host_buff[];
+extern  int     wlog_pend;   // 0 No pending, 1:pending 2:clear out 
+extern  char    ckbuff[];
+extern  UAP     uap1[];
+extern  int     ad_deduct;
+extern  VTAB    vap1;
+extern  vtab    vtabp;               // for vap file 
+extern  int     hup_stat;
+extern  DRFDD   drfd;  // for open drxxx AP file 
+
+extern  char    ginn_drn[], ginn_typ[];
+extern  char    ginn_callingpn[];
+extern  GINN_FUNCPTR    _uap_check_wtring;
+extern  GINN_FUNCPTR    _uap_check_play;
+extern  GINN_FUNCPTR    _uap_check_dial;
+extern  GINN_FUNCPTR    _uap_check_rec;
+extern  GINN_FUNCPTR    _uap_check_tone;
+extern  GINN_FUNCPTR    _uap_check_dtmf;
+extern  GINN_FUNCPTR    _uap_play_end;
+
+
+
+void    conv_time(void);
+
+int     ginn_anticipate(int func, int next, char *p);
+int     ginn_stopdx(int cause);
+int     ginn_getxmitslot(SC_TSINFO *scts);
+int     ginn_listen(long ts);
+int     ginn_unlisten(void);
+int     ginn_dnis(char *p);
+int     ginn_ani(char *p);
+int     ginn_inservice(void);
+int     ginn_outofservice(void);
+int     voice_getxmitslot(SC_TSINFO *scts);
+int     voice_listen(long ts);
+int     voice_unlisten(void);
+int     ginn_setcallingpn(char *p);
+int     ginn_answercall(void);
+int     ginn_playedbytes(void);
+int     ginn_getdtmflen(void);
+int     ginn_getdtmfbuf(char *p);
+int     ginn_clrdtmfbuf(void);
+int     ginn_clrcallend(void);
+int     ginn_setcallend(int);
+int     ginn_setringtm(int tm);
+int     ginn_setexpv(int vcnt, unsigned short *v);
+int     ginn_listenfe(int voie);
+int     ginn_listendx(int voie);
+int     voice_listenfe(int voie);
+int     voice_listendx(int voie);
+int     ginn_waitevt(int duration, GINN_FUNCPTR p);
+int     ginn_clrexpvarbyuser(int flag);
+int     ginn_clrexpvar(void);
+int     ginn_setAA(int autoanswer_flag);
+int     ginn_anticipate(int func, int next, char *p);
+int     ginn_waiteve(int,GINN_FUNCPTR);
+int     ginn_setautoanswer(int autoanswer_flag);
+int     ginn_setplayfmtabs(int fmt);
+int     ginn_setpreferedfnm(int fnm);
+int     ginn_getrecordfnm(void);
+int     ginn_setrecordfnm(int);
+int     ginn_setchkoldmsgheader(int);
